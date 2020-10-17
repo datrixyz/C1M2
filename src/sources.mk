@@ -9,12 +9,19 @@
 #
 #*****************************************************************************
 
-# Source files and include path is provided for HOST platform.
-# MSP432 platform source files and include paths will be added in Makefile
-# in proper condition.
-
 # Source files to this variable
-SOURCES =main.c\
-	 memory.c
+SOURCES = main.c\
+	  memory.c
 # Include paths to this variable
-INCLUDES = -I../include/common
+INCLUDES = -I../include/common/
+
+# Additional source files and include paths for MSP432 platform
+ifeq($(PLATFORM), MSP432)
+	SOURCES = $(SOURCES) \
+		  interrupts_msp432p401r_gcc.c \
+		  startup_msp432p401r_gcc.c \
+		  system_msp432p401r.c
+	INCLUDES = $(INCLUDES) \
+		   -I../include/CMSIS/ \
+		   -I../include/msp432/
+endif
