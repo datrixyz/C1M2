@@ -9,9 +9,12 @@
 #
 #*****************************************************************************
 
-# Add your Source files to this variable
-SOURCES =
+# Source files and include path is provided for HOST platform.
+# MSP432 platform source files and include paths will be added in Makefile
+# in proper condition.
 
-# Add your include paths to this variable
-INCLUDES = 
-
+# Source files to this variable
+SOURCES =main.c\
+	 memory.c
+# Include paths to this variable
+INCLUDES = -I../include/common
