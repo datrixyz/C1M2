@@ -48,7 +48,13 @@ ifeq($(PLATFORM), MSP432)
 	CFLAGS = -Wall -Werror -g -O0 -std=c99  -mcpu=$(CPU) \
 		 -march=$(ARCH) -mthumb --specs=$(SPECS) \
 		 -mfpu=fpv4-sp-d16 -mfolat-abi=hard
-	CPPFLAGs = -D$(PLATFORM)
+	CPPFLAGS = -D$(PLATFORM)
 endif
-
+else
+	CC = gcc
+	LD = ld
+	LDFLAGS = -Wl, -MAP=$(TARGET).map
+	CFLAGS = -Wall -Werror -g -O0 -std=c99
+	CPPFLAGS = -D$(PLATFORM) 
+endif
 
