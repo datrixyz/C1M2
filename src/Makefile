@@ -10,15 +10,21 @@
 #*****************************************************************************
 
 #------------------------------------------------------------------------------
-# <Put a Description Here>
+# Makefile for the host machine(linux) and TI MSP432 build system
 #
 # Use: make [TARGET] [PLATFORM-OVERRIDES]
 #
 # Build Targets:
-#      <Put a description of the supported targets here>
+#      <FILE>.i - Generates the preprocessed output file(s)
+#      <FILE>.asm - Generates assembly output file(s)
+#      <FILE>.o - Builds object file(s)
+#      compile-all - Compiles all object files
+#      build - Compiles all object files and link into a final executable
+#      clean - Removes all generated files
 #
 # Platform Overrides:
-#      <Put a description of the supported Overrides here
+#      HOST - Native host compilation
+#      MSP432 - Cross compilation
 #
 #------------------------------------------------------------------------------
 include sources.mk
