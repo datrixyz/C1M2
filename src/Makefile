@@ -78,9 +78,9 @@ DEPS=$(OBJS:.o=.d)
 	$(CC) -E $(CFLAGS) $(CPPFLAGS) $(INCLUDES) $< -o $@
 # Assembly output files
 %.asm : %.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -c $< -o $@
-	$(OBJDUMP) -S $@
-
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -S $< -o $@
+$(TARGET).asm : $(TARGET).out
+	$(OBJDUMP) -S $< > $@
 # Taget suggestions
 
 # Compile all object files
