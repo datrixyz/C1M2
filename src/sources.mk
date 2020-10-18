@@ -14,9 +14,8 @@ SOURCES = main.c\
 	  memory.c
 # Include paths to this variable
 INCLUDES = -I../include/common/
-
 # Additional source files and include paths for MSP432 platform
-ifeq($(PLATFORM), MSP432)
+ifeq ($(PLATFORM), MSP432)
 	SOURCES = $(SOURCES) \
 		  interrupts_msp432p401r_gcc.c \
 		  startup_msp432p401r_gcc.c \
