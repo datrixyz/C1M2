@@ -16,11 +16,9 @@ SOURCES = main.c\
 INCLUDES = -I../include/common/
 # Additional source files and include paths for MSP432 platform
 ifeq ($(PLATFORM), MSP432)
-	SOURCES = $(SOURCES) \
-		  interrupts_msp432p401r_gcc.c \
-		  startup_msp432p401r_gcc.c \
-		  system_msp432p401r.c
-	INCLUDES = $(INCLUDES) \
-		   -I../include/CMSIS/ \
-		   -I../include/msp432/
+	SOURCES += interrupts_msp432p401r_gcc.c \
+		   startup_msp432p401r_gcc.c \
+		   system_msp432p401r.c
+	INCLUDES += -I../include/CMSIS/ \
+		    -I../include/msp432/
 endif
