@@ -34,27 +34,67 @@ PLATFORM = HOST
 TARGET = c1m2
 
 # Architectures Specific Flags(ARM only)
-ifeq($(PLATFORM), MSP432)
+ifeq ($(PLATFORM),MSP432)
 	LINKER_FILE := ../msp432p401r.lds
 	CPU := cortex-m4
 	ARCH := armv7e-m
 	SPECS := nosys.specS
 endif
 # Compiler Flags and Defines
-ifeq($(PLATFORM), MSP432)
+ifeq ($(PLATFORM),MSP432)
 	CC = arm-none-eabi-gcc
 	LD = arm-none-eabi-ld
-	LDFLAGS = -Wl, -MAP=$(TARGET).map -T $(LINKER_FILE)
+	OBJDUMP = arm-eabi-objdump
+	SIZE = arm-none-eabi-size
+	LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
 	CFLAGS = -Wall -Werror -g -O0 -std=c99  -mcpu=$(CPU) \
 		 -march=$(ARCH) -mthumb --specs=$(SPECS) \
 		 -mfpu=fpv4-sp-d16 -mfolat-abi=hard
 	CPPFLAGS = -D$(PLATFORM)
-endif
 else
 	CC = gcc
 	LD = ld
-	LDFLAGS = -Wl, -MAP=$(TARGET).map
+	OBJDUMP = objdump
+	SIZE = size
+	LDFLAGS = -Wl,-Map=$(TARGET).map
 	CFLAGS = -Wall -Werror -g -O0 -std=c99
-	CPPFLAGS = -D$(PLATFORM) 
+	CPPFLAGS = -D$(PLATFORM)
 endif
 
+OBJS=$(SOURCES:.c=.o)
+DEPS=$(OBJS:.o=.d)
+
+
+#----------------------------build rules-------------------------------#
+# Indivual object files
+%.o : %.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -c $<
+# Dependency files
+%.d : %.c
+	$(CC) -M $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -c $< -o $@
+
+# Preprocessed output files
+%.i : %.c
+	$(CC) -E $(CFLAGS) $(CPPFLAGS) $(INCLUDES) $< -o $@
+# Assembly output files
+%.asm : %.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -c $< -o $@
+	$(OBJDUMP) -S $@
+
+# Taget suggestions
+
+# Compile all object files
+.PHONY : compile-all
+compile-all: $(SOURCES)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -c $^
+# Compile all object files and link into a final executable
+.PHONY : build
+build: $(TARGET).out $(DEPS)
+$(TARGET).out: $(OBJS)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES) $(LDFLAGS) $^ -o $@
+	$(SIZE) $@
+# Remove all non-source files
+.PHONY : clean
+clean:
+	rm -rf *.i *.o *.asm *.map *.out *.d
+#----------------------------------------------------------------------#
